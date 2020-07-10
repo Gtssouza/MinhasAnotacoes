@@ -11,23 +11,44 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
+
+    private AnotacaoPreferencias anotacaoPreferencias;
+    private EditText editText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        editText = findViewById(R.id.editText);
+
+        anotacaoPreferencias = new AnotacaoPreferencias(getApplicationContext());
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
+                String textRecuperado = editText.getText().toString();
+                if(textRecuperado.equals("")){
+                    Snackbar.make(view, "Digite algo", Snackbar.LENGTH_LONG).show();
+                }else{
+                    anotacaoPreferencias.salvarAnotacoes(textRecuperado);
+                    Snackbar.make(view, "ANotação salva com sucesso", Snackbar.LENGTH_LONG).show();
+                }
+
+
             }
         });
+
+        //Recuperar anotação
+        String anotacao = anotacaoPreferencias.recuperarAnotacoes();
+        if(!anotacao.equals("")){
+            editText.setText(anotacao);
+        }
     }
 
 }
